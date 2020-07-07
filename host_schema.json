@@ -1,0 +1,143 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "properties": {
+      "name": { "type": "string", "format": "mandatory"  },
+      "imageURL": { "type": "string", "format": "uri" },
+      "OamIP": { "type": "string", "format": "ipv4" },
+      "OamGateway": { "type": "string", "format": "ipv4" },
+      "OsDisk": { "type": "string", "format": "mandatory" },
+      "grubConfig": { "type": "string", "format": "mandatory" },
+      "IPMIUser": { "type": "string", "format": "mandatory" },
+      "IPMIPassword": { "type": "string", "format": "mandatory" },
+      "IPMIIP": { "type": "string", "format": "ipv4" },
+      "vendor": { "type": "string", "format": "mandatory" },
+      "Model": { "type": "string", "format": "mandatory" },
+      "biosVersion": { "type": "string", "format": "mandatory" },
+      "CPLDFirmwareVersion": { "type": "string", "format": "mandatory" },
+      "RAIDFirmwareVersion": { "type": "string", "format": "mandatory" },
+      "FirmwareVersion": { "type": "string", "format": "mandatory" },
+      "NameServers": {
+        "type": "array",
+        "items": { "$ref": "#/definitions/nameserver" }
+      },
+      "BootActions": {
+        "type": "array",
+        "items": { "$ref": "#/definitions/bootactions" }
+      },
+      "kvmPolicy": {
+        "type": "object",
+        "properties": {
+          "cpuAllocation": { "type": "string", "format": "mandatory" },
+          "cpuPinning": { "type": "string", "format": "mandatory" },
+          "cpuHyperthreading": { "type": "string", "format": "mandatory" }
+        },
+        "required": [ "cpuAllocation", "cpuPinning", "cpuHyperthreading" ]
+      },
+      "BondParameters": {
+        "type": "array",
+        "items": { "$ref": "#/definitions/bondparameters" }
+      },
+      "BondInterfaces": {
+        "type": "array",
+        "items": { "$ref": "#/definitions/bondinterfacess" }
+      },
+      "SSHPubKeys": {
+        "type": "array",
+        "items": { "$ref": "#/definitions/SSHpubkeys" }
+      },
+      "Partitions": {
+        "type": "array",
+        "items": { "$ref": "#/definitions/partition" }
+      },
+      "virtualDisks": {
+        "type": "array",
+        "items": { "$ref": "#/definitions/virtualdisks" }
+    }
+  },
+  "definitions": {
+    "nameserver": {
+      "type": "object",
+      "required": [ "Nameserver" ],
+      "properties": {
+        "Nameserver": {"type": "string", "format": "ipv4"}
+      }
+    },
+    "bootactions": {
+        "type": "object",
+        "required": [ "location", "control", "priority", "name" ],
+        "properties": {
+            "location": { "type": "string", "format": "uri" },
+            "control": { "type": "string", "format": "mandatory" },
+            "name": { "type": "string", "format": "mandatory" },
+            "priority": { "type" : "integer" },
+            "args": { "type" : "string" }
+        }
+    },
+    "bondparameters": {
+        "type": "object",
+        "required": [ "Key", "Value"],
+        "properties": {
+            "Key": {"type": "string", "format": "mandatory"},
+            "Value": { "type": "string", "format": "mandatory"}
+        }
+    },
+    "bondinterfacess": {
+        "type": "object",
+        "required": [ "BondInterface" ],
+        "properties": {
+            "BondInterface": {"type": "string", "format": "mandatory"}
+        }
+    },
+    "SSHpubkeys": {
+        "type": "object",
+        "required": [ "SSHPubKey"],
+        "properties": {
+            "SSHPubKey": { "type": "string", "format": "mandatory" }
+        }
+    },
+    "partition": {
+        "type": "object",
+        "required": [ "name", "size", "filesystem"],
+        "properties": {
+          "name": { "type": "string", "format": "mandatory" },
+          "size": { "type": "string", "format": "mandatory" },
+          "bootable": { "type": "boolean" },
+          "primary": { "type": "boolean" },
+          "filesystem": {
+                "type": "object",
+                "required": [ "mountpoint", "fstype", "mount-options"],
+                "properties": {
+                    "mountpoint": { "type": "string", "format": "mandatory" },
+                    "fstype": { "type": "string", "format": "mandatory" },
+                    "mount-options": { "type": "string", "format": "mandatory" }
+                }
+            }
+        }
+    },
+    "virtualdisks": {
+        "type": "object",
+        "required": [ "name", "raidType", "RaidController", "PhysicalDisks"],
+        "properties": {
+          "name": { "type": "string", "format": "mandatory" },
+          "raidType": { "type": "integer" },
+          "bootable": { "type": "string", "format": "mandatory" },
+          "RaidController": { "type": "string", "format": "mandatory" },
+          "PhysicalDisks": {
+            "type": "array",
+            "items": { "$ref": "#/definitions/physicaldisks" }
+          }
+            
+        }
+    },
+    "physicaldisks": {
+        "type": "object",
+        "required": [ "VirtualDiskID", "PhysicalDisk"],
+        "properties": {
+            "VirtualDiskID": { "type": "integer" },
+            "PhysicalDisk": { "type": "string", "format": "mandatory" }
+        }
+    }
+  },
+  "required": [ "name", "imageURL", "OamIP", "OamGateway", "OsDisk", "grubConfig", "IPMIUser", "IPMIPassword", "IPMIIP", "vendor", "Model", "biosVersion", "CPLDFirmwareVersion", "RAIDFirmwareVersion", "FirmwareVersion", "NameServers", "virtualDisks", "Partitions", "SSHPubKeys", "BondInterfaces", "BondParameters", "BootActions", "kvmPolicy" ]
+}
